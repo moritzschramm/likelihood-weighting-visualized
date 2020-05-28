@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<PropertiesTreeModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="PropertiesTreeModel.xsd">
+	<Folder name="Root">
+		<Primitive type="int">
+			<name>Seed</name>
+			<value><int>1234</int></value>
+			<description>Der Seed für die zufällig berechneten Sample Werte</description>
+		</Primitive>
+
+		<Primitive type="double">
+			<name>P(Y)</name>
+			<value><double>0.3</double></value>
+			<description>Wert für die Wahrscheinlichkeit P(Y)</description>
+		</Primitive>
+
+		<Primitive type="double">
+			<name>P(X | Y=true)</name>
+			<value><double>0.4</double></value>
+			<description>Wert für die Wahrscheinlichkeit P(X | Y=true)</description>
+		</Primitive>
+		<Primitive type="double">
+			<name>P(X | Y=false)</name>
+			<value><double>0.7</double></value>
+			<description>Wert für die Wahrscheinlichkeit P(X | Y=false)</description>
+		</Primitive>
+
+		<Primitive type="double">
+			<name>P(A | Y=true)</name>
+			<value><double>0.1</double></value>
+			<description>Wert für die Wahrscheinlichkeit P(A | Y=true)</description>
+		</Primitive>
+		<Primitive type="double">
+			<name>P(A | Y=false)</name>
+			<value><double>0.2</double></value>
+			<description>Wert für die Wahrscheinlichkeit P(A | Y=false)</description>
+		</Primitive>
+
+		<Primitive type="double">
+			<name>P(B | A=true, X=true)</name>
+			<value><double>0.9</double></value>
+			<description>Wert für die Wahrscheinlichkeit P(B | A=true, X=true)</description>
+		</Primitive>
+		<Primitive type="double">
+			<name>P(B | A=true, X=false)</name>
+			<value><double>0.99</double></value>
+			<description>Wert für die Wahrscheinlichkeit P(B | A=true, X=false)</description>
+		</Primitive>
+		<Primitive type="double">
+			<name>P(B | A=false, X=true)</name>
+			<value><double>0.3</double></value>
+			<description>Wert für die Wahrscheinlichkeit P(B | A=false, X=true)</description>
+		</Primitive>
+		<Primitive type="double">
+			<name>P(B | A=false, X=false)</name>
+			<value><double>0.6</double></value>
+			<description>Wert für die Wahrscheinlichkeit P(B | A=false, X=false)</description>
+		</Primitive>
+
+		<Primitive type="boolean">
+			<name>A</name>
+			<value><boolean value="true" /></value>
+			<description>Fester Wert für die Zufallsvariable A</description>
+		</Primitive>
+		<Primitive type="boolean">
+			<name>B</name>
+			<value><boolean value="true" /></value>
+			<description>Fester Wert für die Zufallsvariable B</description>
+		</Primitive>
+
+	</Folder>
+</PropertiesTreeModel>
