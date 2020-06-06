@@ -25,6 +25,17 @@ public class LikelihoodWeighting implements Generator {
         return lang.toString();
     }
 
+    public void likelihoodWeighting() {
+
+        // TODO
+    }
+
+    public int[] weightedSample() {
+
+        // TODO
+        return null;
+    }
+
     public String getName() {
         return "LikelihoodWeighting";
     }
@@ -38,11 +49,36 @@ public class LikelihoodWeighting implements Generator {
     }
 
     public String getDescription(){
-        return "desc";
+        return "Spezialfall von Importance Sampling, zugeschnitten auf Inferenz in Bayesschen Netzen. Erzeugt Ergebnisse die konsistent zu Evidenz e sind. ";
     }
 
     public String getCodeExample(){
-        return "code";
+        return "function likelihoodWeighting(Var, evidence, N):"
+                +"\n"
+                +"    for j = 1 to N:"
+                +"\n"
+                +"        x, w = weightedSample(evidence)"
+                +"\n"
+                +"        W[x] = W[x] + w"
+                +"\n"
+                +"return normalize(W)"
+                +"\n"
+                +"\n"
+                +"function weightedSample(evidence):"
+                +"\n"
+                +"    w = 1; x mit e init....//fixme"
+                +"\n"
+                +"    foreach Var in Vars:"
+                +"\n"
+                +"        if Var is in evidence//fixme:"
+                +"\n"
+                +"            w = w * P( Var = x | parents(Var) )"
+                +"\n"
+                +"        else:"
+                +"\n"
+                +"            x[i] = sample(P(Var | parents(Var))"
+                +"\n"
+                +"return x, w";
     }
 
     public String getFileExtension(){
