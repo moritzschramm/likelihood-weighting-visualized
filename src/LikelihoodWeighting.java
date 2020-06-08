@@ -37,7 +37,7 @@ public class LikelihoodWeighting implements ValidatingGenerator {
     // iteration number, increased when likelihoodWeighting() is called
     private int iteration = 0;
 
-    private double[] samplesX;
+    private Hashtable<String, double[]> samples;
     private double[] normalizedSamplesX;
 
     public void init(){
@@ -50,12 +50,12 @@ public class LikelihoodWeighting implements ValidatingGenerator {
 
         iteration = 0;
 
-        samplesX = new double[2];
+        samples = new Hashtable<>();
         normalizedSamplesX = new double[2];
 
         code = new Code(lang);
         bn = new BayesNet(lang);
-        info = new InformationDisplay(lang, bn, samplesX, normalizedSamplesX);
+        info = new InformationDisplay(lang, bn, samples, normalizedSamplesX);
     }
 
     public String generate(AnimationPropertiesContainer props,Hashtable<String, Object> primitives) {
@@ -99,7 +99,17 @@ public class LikelihoodWeighting implements ValidatingGenerator {
 
         lang.nextStep();
 
-        //TODO sample
+
+        likelihoodWeighting();
+
+        int SAMPLES = 9;
+
+        for(int i = 0; i < SAMPLES; i++) {
+
+            code.highlight(0);
+            lang.nextStep();
+            likelihoodWeighting();
+        }
 
         lang.nextStep("Zusammenfassung");
 
@@ -154,9 +164,8 @@ public class LikelihoodWeighting implements ValidatingGenerator {
         code.highlight(1);
 
         double w = 1;
-        int x = bn.values.get(BayesNet.X) ? 1 : 0;
 
-        for(String var: new String[]{BayesNet.A, BayesNet.B, BayesNet.X, BayesNet.Y}) {
+        for(String var: bn.list()) {
 
             if(var.equals(BayesNet.A) || var.equals(BayesNet.B)) {
 
@@ -178,12 +187,15 @@ public class LikelihoodWeighting implements ValidatingGenerator {
                 boolean sample = createSampleValue(p);
 
                 bn.values.put(var, sample);
-
-                //TODO x[i]
             }
         }
 
-        //FIXME samplesX[x] += w;
+        for(String var: bn.list()) {
+
+            double [] tmp = samples.get(var);
+            tmp[bn.values.get(var) ? 1 : 0] += w;
+            samples.put(var, tmp);
+        }
         normalize();
 
         info.updateInformation(iteration);
@@ -196,9 +208,9 @@ public class LikelihoodWeighting implements ValidatingGenerator {
 
     private void normalize() {
 
-        double sum = samplesX[0] + samplesX[1];
-        normalizedSamplesX[0] = samplesX[0] / sum;
-        normalizedSamplesX[1] = samplesX[1] / sum;
+        double sum = samples.get(BayesNet.X)[0] + samples.get(BayesNet.X)[1];
+        normalizedSamplesX[0] = samples.get(BayesNet.X)[0] / sum;
+        normalizedSamplesX[1] = samples.get(BayesNet.X)[1] / sum;
     }
 
     public String getName() {
