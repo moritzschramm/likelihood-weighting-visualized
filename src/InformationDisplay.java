@@ -9,6 +9,7 @@ import algoanim.util.Offset;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.Hashtable;
 import java.util.Locale;
 
 public class InformationDisplay {
@@ -23,17 +24,15 @@ public class InformationDisplay {
     private Text childVarDisplay;
     private Text probabilityDisplay;
 
-    private int[] samplesX;
-    private int[] samplesY;
+    private Hashtable<String, double[]> samples;
     private double[] normalizedSamplesX;
-    private double[] normalizedSamplesY;
 
 
-    public InformationDisplay(Language lang, BayesNet bn, int[] samplesX, double[] normalizedSamplesX) {
+    public InformationDisplay(Language lang, BayesNet bn, Hashtable<String, double[]> samples, double[] normalizedSamplesX) {
 
         this.lang = lang;
         this.bn = bn;
-        this.samplesX = samplesX;
+        this.samples = samples;
         this.normalizedSamplesX = normalizedSamplesX;
     }
 
@@ -46,7 +45,7 @@ public class InformationDisplay {
                 Font.SANS_SERIF, Font.PLAIN, 16));
 
         iterationDisplay = lang.newText(new Coordinates(350, 70), "Iteration: 0", "iterationDisplay", null, props);
-        sampleXDisplay = lang.newText(new Offset(0, 25, "iterationDisplay", AnimalScript.DIRECTION_NW), "Samples X: (" + samplesX[1] + ", " + samplesX[0] + ")", "sampleXDisplay", null, props);
+        sampleXDisplay = lang.newText(new Offset(0, 25, "iterationDisplay", AnimalScript.DIRECTION_NW), "Samples X: (" + samples.get(BayesNet.X)[1] + ", " + samples.get(BayesNet.X)[0] + ")", "sampleXDisplay", null, props);
 
         normalizedSampleXDisplay =
                 lang.newText(new Offset(0, 25, "sampleXDisplay", AnimalScript.DIRECTION_NW), bn.key(BayesNet.X, BayesNet.A, BayesNet.B)+" = (" + normalizedSamplesX[1] + ", " +normalizedSamplesX[0] + ")", "normalizedSampleXDisplay", null, props);
@@ -64,7 +63,7 @@ public class InformationDisplay {
         DecimalFormat df = new DecimalFormat("0.0##", new DecimalFormatSymbols(Locale.ENGLISH));
 
         iterationDisplay.setText("Iteration: " + iteration, null, null);
-        sampleXDisplay.setText("Samples X: (" + samplesX[1] + ", " + samplesX[0] + ")", null, null);
+        sampleXDisplay.setText("Samples X: (" + samples.get(BayesNet.X)[1] + ", " + samples.get(BayesNet.X)[0] + ")", null, null);
         normalizedSampleXDisplay.setText(bn.key(BayesNet.X, BayesNet.A, BayesNet.B)+" = ("+ df.format(normalizedSamplesX[1]) + ", " + df.format(normalizedSamplesX[0]) + ")", null, null);
     }
 
