@@ -106,6 +106,11 @@ public class BayesNet {
         }
     }
 
+    public String[] list() {
+
+        return new String[]{A, B, Y, X};
+    }
+
     public String[] parents(String var) {
 
         switch (var) {
