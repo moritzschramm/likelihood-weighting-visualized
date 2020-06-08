@@ -37,6 +37,9 @@ public class LikelihoodWeighting implements ValidatingGenerator {
     // iteration number, increased when likelihoodWeighting() is called
     private int iteration = 0;
 
+    private double[] samplesX;
+    private double[] normalizedSamplesX;
+
     public void init(){
         lang = new AnimalScript("LikelihoodWeighting", "Moritz Schramm", 800, 600);
 
@@ -47,9 +50,12 @@ public class LikelihoodWeighting implements ValidatingGenerator {
 
         iteration = 0;
 
+        samplesX = new double[2];
+        normalizedSamplesX = new double[2];
+
         code = new Code(lang);
         bn = new BayesNet(lang);
-        info = new InformationDisplay(lang, bn);
+        info = new InformationDisplay(lang, bn, samplesX, normalizedSamplesX);
     }
 
     public String generate(AnimationPropertiesContainer props,Hashtable<String, Object> primitives) {
@@ -93,24 +99,106 @@ public class LikelihoodWeighting implements ValidatingGenerator {
 
         lang.nextStep();
 
+        //TODO sample
+
+        lang.nextStep("Zusammenfassung");
+
+        showOutro();
+
+
+        lang.finalizeGeneration();
+
 
         return lang.toString();
     }
 
     private void showIntro() {
 
+        TextProperties props = new TextProperties();
+        props.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+                Font.SANS_SERIF, Font.PLAIN, 16));
 
+        String text = getDescription();
+
+        Text intro = lang.newText(new Coordinates(20, 80), text, null, null, props);
+
+        lang.nextStep();
+
+        intro.hide();
     }
 
+    private void showOutro() {
+
+        lang.hideAllPrimitives();
+        header.show();
+
+        TextProperties props = new TextProperties();
+        props.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+                Font.SANS_SERIF, Font.PLAIN, 16));
+
+        String text = "outro";       // TODO add summary (StringBuilder,..)
+
+        Text outro = lang.newText(new Coordinates(20, 80), text, null, null, props);
+
+        lang.nextStep();
+    }
+
+
+    /* algorithm */
     public void likelihoodWeighting() {
 
-        // TODO
+        iteration++;
+        info.updateInformation(iteration);
+
+        code.unhighlight(0);
+        code.highlight(1);
+
+        double w = 1;
+        int x = bn.values.get(BayesNet.X) ? 1 : 0;
+
+        for(String var: new String[]{BayesNet.A, BayesNet.B, BayesNet.X, BayesNet.Y}) {
+
+            if(var.equals(BayesNet.A) || var.equals(BayesNet.B)) {
+
+                double p = bn.probabilities.get(bn.key(var, bn.parents(var)));
+
+                if(!bn.values.get(var)) p = 1 - p;
+
+                w *= p;
+
+            } else {
+
+                double p = bn.probabilities.get(bn.key(var, bn.parents(var)));
+
+                for(String child: bn.children(var)) {
+
+                    p *= bn.probabilities.get(bn.key(child, bn.parents(child)));
+                }
+
+                boolean sample = createSampleValue(p);
+
+                bn.values.put(var, sample);
+
+                //TODO x[i]
+            }
+        }
+
+        //FIXME samplesX[x] += w;
+        normalize();
+
+        info.updateInformation(iteration);
     }
 
-    public int[] weightedSample() {
+    private boolean createSampleValue(double p) {
 
-        // TODO
-        return null;
+        return random.nextDouble() <= p;
+    }
+
+    private void normalize() {
+
+        double sum = samplesX[0] + samplesX[1];
+        normalizedSamplesX[0] = samplesX[0] / sum;
+        normalizedSamplesX[1] = samplesX[1] / sum;
     }
 
     public String getName() {

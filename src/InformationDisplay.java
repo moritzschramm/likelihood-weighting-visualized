@@ -29,14 +29,12 @@ public class InformationDisplay {
     private double[] normalizedSamplesY;
 
 
-    public InformationDisplay(Language lang, BayesNet bn, int[] samplesX, int[] samplesY, double[] normalizedSamplesX, double[] normalizedSamplesY) {
+    public InformationDisplay(Language lang, BayesNet bn, int[] samplesX, double[] normalizedSamplesX) {
 
         this.lang = lang;
         this.bn = bn;
         this.samplesX = samplesX;
-        this.samplesY = samplesY;
         this.normalizedSamplesX = normalizedSamplesX;
-        this.normalizedSamplesY = normalizedSamplesY;
     }
 
 
