@@ -1,3 +1,5 @@
+package generators.misc.BNSamplingHelper;
+
 import algoanim.primitives.Graph;
 import algoanim.primitives.generators.Language;
 import algoanim.properties.AnimationPropertiesKeys;
@@ -41,7 +43,7 @@ public class BayesNet {
     public void setProbabilitiesAndValues(Hashtable<String, Object> primitives) {
 
         probabilities.put("P(Y)", (double) primitives.get("P(Y)"));
-        probabilities.put("P(X | Y=true)", (double) primitives.get("P(X | Y=true)"));                   // P(X | Y=true) = P(X=true | Y=true)
+        probabilities.put("P(X | Y=true)", (double) primitives.get("P(X | Y=true)"));
         probabilities.put("P(X | Y=false)", (double) primitives.get("P(X | Y=false)"));
         probabilities.put("P(A | Y=true)", (double) primitives.get("P(A | Y=true)"));
         probabilities.put("P(A | Y=false)", (double) primitives.get("P(A | Y=false)"));
@@ -104,11 +106,6 @@ public class BayesNet {
             case Y: return 0;
             default: return -1;
         }
-    }
-
-    public String[] list() {
-
-        return new String[]{A, B, Y, X};
     }
 
     public String[] parents(String var) {

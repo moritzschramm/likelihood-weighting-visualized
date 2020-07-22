@@ -3,8 +3,9 @@
  * Moritz Schramm, 2020 for the Animal project at TU Darmstadt.
  * Copying this file for educational purposes is permitted without further authorization.
  */
-//package generators.misc;
+package generators.misc;
 
+import generators.misc.BNSamplingHelper.*;
 import algoanim.primitives.Text;
 import algoanim.properties.AnimationPropertiesKeys;
 import algoanim.properties.TextProperties;
@@ -292,26 +293,30 @@ public class LikelihoodWeighting implements ValidatingGenerator {
 
         Generator generator = new LikelihoodWeighting();
         generator.init();
-        //animal.main.Animal.startGeneratorWindow(generator);
 
+        if(args[0].equals("generator")) {
 
+            animal.main.Animal.startGeneratorWindow(generator);
 
-        Hashtable<String, Object> primitives = new Hashtable<>();
-        primitives.put("Seed", 1234);
+        } else if (args[0].equals("animation")) {
 
-        primitives.put("P(Y)", 0.8);
-        primitives.put("P(X | Y=true)", 0.4);
-        primitives.put("P(X | Y=false)", 0.7);
-        primitives.put("P(A | Y=true)", 0.1);
-        primitives.put("P(A | Y=false)", 0.2);
-        primitives.put("P(B | A=true, X=true)", 0.9);
-        primitives.put("P(B | A=true, X=false)", 0.99);
-        primitives.put("P(B | A=false, X=true)", 0.3);
-        primitives.put("P(B | A=false, X=false)", 0.6);
+            Hashtable<String, Object> primitives = new Hashtable<>();
+            primitives.put("Seed", 1234);
 
-        primitives.put("A", false);
-        primitives.put("B", true);
+            primitives.put("P(Y)", 0.8);
+            primitives.put("P(X | Y=true)", 0.4);
+            primitives.put("P(X | Y=false)", 0.7);
+            primitives.put("P(A | Y=true)", 0.1);
+            primitives.put("P(A | Y=false)", 0.2);
+            primitives.put("P(B | A=true, X=true)", 0.9);
+            primitives.put("P(B | A=true, X=false)", 0.99);
+            primitives.put("P(B | A=false, X=true)", 0.3);
+            primitives.put("P(B | A=false, X=false)", 0.6);
 
-        System.out.println(generator.generate(null, primitives));
+            primitives.put("A", false);
+            primitives.put("B", true);
+
+            System.out.println(generator.generate(null, primitives));
+        }
     }
 }

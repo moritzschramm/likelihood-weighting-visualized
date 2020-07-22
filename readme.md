@@ -15,3 +15,8 @@ jdom.jar
 jscheme_edit.jar
 miglayout-3.7.3.1.jar
 ```
+
+## IntelliJ:
+1. Add libraries to module in module settings
+2. Create configuration 'Generator' to execute main of GibbsSampling with argument 'generator'
+3. Create configuration 'Animation' to execute main of GibbsSampling with argument 'animation'. Animation will be printed by System.out.
