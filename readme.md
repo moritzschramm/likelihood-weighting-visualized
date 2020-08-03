@@ -1,5 +1,5 @@
 # Installation
-Copy these JARs into ./ directory
+Copy these JARs into ./ directory (from [Animal](http://algoanim.net/downloads/))
 
 ```
 Animal.jar
