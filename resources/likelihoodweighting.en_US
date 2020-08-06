@@ -1,0 +1,50 @@
+noSuchKeyException=There is no resource for key {0}
+iconNotFound=Icon "{0}" not found
+
+### keys ###
+
+introTOC=Intro
+firstIterationTOC=1st iteration
+outroTOC=Summary
+
+of=of
+normValue=Normalized value
+
+description=Bayesian networks are used to model dependencies between random variables and to calculate probabilities of events. \nDeveloping exact inference, i.e determine a conditional probability, is a NP-hard problem for bayesian networks. For this reason sampling methods are used to approximate the exact inference. \nHere we use Gibbs Sampling, a Markov Chain Monte Carlo algorithm. It starts in a random state and generates a new state based on a random sample of a random variable for each iteration. \nThe probability to sample a specific value depends on the conditional propabilities that were set at the beginning.
+
+intro=A directed graph is used to visualize the bayessian network so that the vertices represent the random variables and the edges represent the conditions. \nThe unknown random variables (non-evidence variables) will be random-sampled based on the computed probabilities and receive a value of true or false.\nBy counting the numbers of samples of true and false for each non-evidence variable and normalizing them at the end, the algorithm approximates the a-posteriori probability by time over each iteration.
+
+outro=As we can see, the algorithm produces an relatable result for X in consideration of the bayessian network. \nIt can be shown that the approximation converges in a stationary state of the markov-chain which corresponds to the real probability distribution. \nTherefore the bias of the discretization (sampling) vanishes with respect to the iterations taken. \nThe downside of this algorithm is that it needs all conditional probabilities which are often not available.
+
+
+
+line0=Begin new iteration
+
+line1=Choose random variable with unknown value
+
+line2=Calculate the probability P( Var | markov-blanket(Var) ) = P(Var | parents(Var) ) * ...
+
+line3=... * P( ChildVar | parents(ChildVar) )  for each child node ...
+
+line4... where each conditional probability is known
+
+line5=Based on the calculated probability 'p', sample a value for ...
+
+line6=... the chosen random variable and store the value in a vector
+
+line7=Normalise the vector and return the result
+
+
+wrong_asw=wrong answer\n
+
+right_asw=right answer\n
+
+q1_text=Which random variables can be sampled?
+
+q1_asw1=Only X can be sampled.
+
+q1_asw2=All random variables can be sampled.
+
+q1_asw3=Only X and Y can be sampled.
+
+q1_fb=All random variables can be sampled except the evidence variables.

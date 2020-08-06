@@ -1,0 +1,50 @@
+noSuchKeyException=Es gibt keine Ressource f\u000ferr Eintrag {0}
+iconNotFound=Icon "{0}" not found
+
+### keys ###
+
+introTOC=Einleitung
+firstIterationTOC=Erste Iteration
+outroTOC=Zusammenfassung
+
+of=von
+normValue=Normalisierter Wert
+
+description=Bayessche Netze werden dazu genutzt, um Abhängigkeiten zwischen Zufallsvariablen zu modellieren und Wahrscheinlichkeiten von Ereignissen zu berechnen. \nExakte Inferenz, d.h. die Bestimmung einer bedingten Wahrscheinlichkeit, ist in solchen Netzen allerdings ein NP-hartes Problem, weswegen man mit Sampling Methoden zumindest eine annähernd exakte Inferenz erreichen will.\nHier wird Gibbs Sampling genutzt, ein Markov Chain Monte Carlo Algorithmus. Dieser beginnt in einem willkürlichen Zustand und erzeugt jede Iteration einen neuen Zustand, indem ein Wert durch ein zufälliges Sample einer Zufallsvariable erzeugt wird. \nDie Wahrscheinlichkeit einen bestimmten Wert zu samplen hängt dabei von den vorher festgeletgten bedingten Wahrscheinlichkeiten der Zufallsvariablen ab.
+
+intro=Der gerichtete Graph in diesem Beispiel visualisiert das gewählte Bayessche Netz, wobei die Knoten die Zufallsvariablen und die Kanten die Abhängigkeiten darstellen. \nDie unbekannten Zufallsvariablen werden anhand der berechneten Wahrscheinlichkeit einer Zufallsstichprobe unterzogen (gesamplet) und erhalten damit einen eindeutigen Wert.\nDurch das Zählen der Samples wird damit die a-posteriori Wahrscheinlichkeit einer unbekannten Zufallsvariable über die Iterationen mit der Zeit angenähert, was auch das Ziel des Sampling-Algorithmus ist.
+
+outro=Wie wir sehen konnten hat der Algorithmus in anbetracht des Bayesschen Netzes für X ein nachvollziehbares Ergebnis geliefert. \nEs lässt sich zeigen, dass diese Annäherung in einem stationären Zustand der Markov-Kette konvergiert, welcher der echte Wahrscheinlichkeitsverteilung entspricht. \nWenn man also nur lange genug samplet, lässt sich ein Bias durch die Diskretisierung der Ergebnisse minimieren. \nNachteil ist jedoch das dieser Algorithmus alle bedingten Wahrscheinlichkeiten gegeben haben muss, welche oft nicht zur Verfügung stehen.
+
+firstIteration=1. Iteration
+
+line0=Starte neue Iteration
+
+line1=Wähle Zufallsvariable, deren Wert nicht bekannt ist, aus
+
+line2=Die Wahrscheinlichkeit P( Var | markov-blanket(Var) ) = P(Var | parents(Var) ) * ...
+
+line3=... * P( ChildVar | parents(ChildVar) )  für jeden Kindknoten ...
+
+line4=... wobei diese bedingten Wahrscheinlichkeiten bekannt sind
+
+line5=Basierend auf der berechneten Wahrscheinlichkeit 'p', erzeuge einen Wert für die ...
+
+line6=... gewählte Zufallsvariable und speichere den Wert in einer Liste
+
+line7=Normalisiere die Liste und gib das Ergebnis zurück
+
+
+wrong_asw=falsche Antwort\n
+
+right_asw=richtige Antwort\n
+
+q1_text=Welche Zufallsvariablen können in unserem Beispiel gesamplet werden?
+
+q1_asw1=Es kann nur X gesamplet werden.
+
+q1_asw2=Es können alle Zufallsvariablen gesamplet werden.
+
+q1_asw3=Es können nur X und Y gesamplet werden.
+
+q1_fb=Nur Evidenzvariablen können nicht gesamplet werden.

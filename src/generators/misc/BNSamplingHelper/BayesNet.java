@@ -6,6 +6,7 @@ import algoanim.properties.AnimationPropertiesKeys;
 import algoanim.properties.GraphProperties;
 import algoanim.util.Coordinates;
 import algoanim.util.Node;
+import generators.framework.properties.AnimationPropertiesContainer;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -13,15 +14,20 @@ import java.util.Hashtable;
 
 public class BayesNet {
 
-    public static final String A = "A";
-    public static final String B = "B";
-    public static final String X = "X";
-    public static final String Y = "Y";
-
     private Language lang;
 
-    private Graph g;
+    // graph and properties
+    private Graph graph;
+    private GraphProperties props;
+    private int[][] adjacencyMatrix;
+    public static Color HIGHLIGHT_COLOR;
+    public static Color SELECT_COLOR;
+    public static Color TRUE_COLOR;
+    public static Color FALSE_COLOR;
 
+    // variables
+    private String [] vars;
+    private String [] sampleVars;
 
     // hashtables, containing probabilities and values of random variables
     public Hashtable<String, Double> probabilities;
@@ -33,109 +39,206 @@ public class BayesNet {
         this.lang = lang;
         this.values = new Hashtable<>();
         this.probabilities = new Hashtable<>();
-
-        values.put(A, false);
-        values.put(B, false);
-        values.put(X, false);
-        values.put(Y, false);
     }
 
-    public void setProbabilitiesAndValues(Hashtable<String, Object> primitives) {
+    public void init(Hashtable<String, Object> primitives, GraphProperties props, String[] vars, String[] samplesVars) {
 
-        probabilities.put("P(Y)", (double) primitives.get("P(Y)"));
-        probabilities.put("P(X | Y=true)", (double) primitives.get("P(X | Y=true)"));
-        probabilities.put("P(X | Y=false)", (double) primitives.get("P(X | Y=false)"));
-        probabilities.put("P(A | Y=true)", (double) primitives.get("P(A | Y=true)"));
-        probabilities.put("P(A | Y=false)", (double) primitives.get("P(A | Y=false)"));
-        probabilities.put("P(B | A=true, X=true)", (double) primitives.get("P(B | A=true, X=true)"));
-        probabilities.put("P(B | A=true, X=false)", (double) primitives.get("P(B | A=true, X=false)"));
-        probabilities.put("P(B | A=false, X=true)", (double) primitives.get("P(B | A=false, X=true)"));
-        probabilities.put("P(B | A=false, X=false)", (double) primitives.get("P(B | A=false, X=false)"));
+        this.graph = (Graph) primitives.get("graph");
+        this.props = props;
 
-        values.put(A, (boolean) primitives.get(A));
-        values.put(B, (boolean) primitives.get(B));
+        this.vars = vars;
+        this.sampleVars = samplesVars;
+        this.adjacencyMatrix = graph.getAdjacencyMatrix();
+
+        for(String var: vars) {
+            values.put(var, false);
+        }
+
+        // init colors
+        HIGHLIGHT_COLOR = (Color) primitives.get("Highlight Color");
+        SELECT_COLOR = (Color) primitives.get("Select Color");
+        TRUE_COLOR = (Color) primitives.get("True Color");
+        FALSE_COLOR = (Color) primitives.get("False Color");
+
+        // init values and probabilities
+        String[] v = (String[]) primitives.get("Values");
+        int id = 0;
+        for(String var: vars) {
+            if(Arrays.asList(sampleVars).contains(var)) continue;
+            boolean value = v[id].equals("true");
+            id++;
+            values.put(var, value);
+        }
+
+        int[][] p = (int[][]) primitives.get("Probabilities");
+
+        for(int i = 0; i < vars.length; i++) {
+            String var = int2node(i);
+            String[] parents = parents(var);
+            Hashtable<String, Boolean> values;
+            switch(parents.length) {
+                case 0:
+                    probabilities.put(key(var), p[0][i] / 100.0);
+                    break;
+
+                case 1:
+                    values = new Hashtable<>();
+                    values.put(parents[0], true);
+                    probabilities.put(key(var, null, values, parents), p[0][i] / 100.0);
+                    values.put(parents[0], false);
+                    probabilities.put(key(var, null, values, parents), p[1][i] / 100.0);
+                    break;
+
+                case 2:
+                    values = new Hashtable<>();
+                    values.put(parents[0], true);
+                    values.put(parents[1], true);
+                    probabilities.put(key(var, null, values, parents), p[0][i] / 100.0);
+                    values.put(parents[0], true);
+                    values.put(parents[1], false);
+                    probabilities.put(key(var, null, values, parents), p[1][i] / 100.0);
+                    values.put(parents[0], false);
+                    values.put(parents[1], true);
+                    probabilities.put(key(var, null, values, parents), p[2][i] / 100.0);
+                    values.put(parents[0], false);
+                    values.put(parents[1], false);
+                    probabilities.put(key(var, null, values, parents), p[3][i] / 100.0);
+                    break;
+
+                default: // case 3
+                    values = new Hashtable<>();
+                    values.put(parents[0], true);
+                    values.put(parents[1], true);
+                    values.put(parents[2], true);
+                    probabilities.put(key(var, null, values, parents), p[0][i] / 100.0);
+                    values.put(parents[0], true);
+                    values.put(parents[1], true);
+                    values.put(parents[2], false);
+                    probabilities.put(key(var, null, values, parents), p[1][i] / 100.0);
+                    values.put(parents[0], true);
+                    values.put(parents[1], false);
+                    values.put(parents[2], true);
+                    probabilities.put(key(var, null, values, parents), p[2][i] / 100.0);
+                    values.put(parents[0], true);
+                    values.put(parents[1], false);
+                    values.put(parents[2], false);
+                    probabilities.put(key(var, null, values, parents), p[3][i] / 100.0);
+
+                    values.put(parents[0], false);
+                    values.put(parents[1], true);
+                    values.put(parents[2], true);
+                    probabilities.put(key(var, null, values, parents), p[4][i] / 100.0);
+                    values.put(parents[0], false);
+                    values.put(parents[1], true);
+                    values.put(parents[2], false);
+                    probabilities.put(key(var, null, values, parents), p[5][i] / 100.0);
+                    values.put(parents[0], false);
+                    values.put(parents[1], false);
+                    values.put(parents[2], true);
+                    probabilities.put(key(var, null, values, parents), p[6][i] / 100.0);
+                    values.put(parents[0], false);
+                    values.put(parents[1], false);
+                    values.put(parents[2], false);
+                    probabilities.put(key(var, null, values, parents), p[7][i] / 100.0);
+                    break;
+            }
+        }
     }
 
     public void add() {
 
-        int[][] adjacencyMatrix = new int[4][4];
-        for(int i = 0; i < adjacencyMatrix.length; i++)
-            for(int j = 0; j < adjacencyMatrix.length; j++)
-                adjacencyMatrix[i][j] = 0;
+        int size = graph.getSize();
+        Node[] nodes = new Node[size];
+        String[] nodeLabels = new String[size];
+        for (int i = 0; i < size; i++) {
+            nodes[i] = graph.getNode(i);
+            nodeLabels[i] = graph.getNodeLabel(i);
+        }
 
-        adjacencyMatrix[0][1] = 1;
-        adjacencyMatrix[0][2] = 1;
-        adjacencyMatrix[1][3] = 1;
-        adjacencyMatrix[2][3] = 1;
+        graph = lang.newGraph("bn", graph.getAdjacencyMatrix(), nodes, nodeLabels, graph.getDisplayOptions(), props);
 
-        Node[] nodes = new Node[4];
-        nodes[0] = new Coordinates(150, 100);
-        nodes[1] = new Coordinates(50, 150);
-        nodes[2] = new Coordinates(250, 150);
-        nodes[3] = new Coordinates(150, 200);
-
-        GraphProperties graphProps = new GraphProperties();
-        graphProps.set(AnimationPropertiesKeys.DIRECTED_PROPERTY, true);
-        graphProps.set(AnimationPropertiesKeys.FILLED_PROPERTY, false);
-        graphProps.set(AnimationPropertiesKeys.FILL_PROPERTY, Color.WHITE);
-        graphProps.set(AnimationPropertiesKeys.EDGECOLOR_PROPERTY, Color.BLACK);
-        graphProps.set(AnimationPropertiesKeys.ELEMHIGHLIGHT_PROPERTY, Color.BLACK);
-        graphProps.set(AnimationPropertiesKeys.HIGHLIGHTCOLOR_PROPERTY, Color.GREEN);
-        graphProps.set(AnimationPropertiesKeys.NODECOLOR_PROPERTY, Color.BLACK);
-        graphProps.set(AnimationPropertiesKeys.WEIGHTED_PROPERTY, false);
-
-        g = lang.newGraph("bn", adjacencyMatrix, nodes, new String[]{Y, A, X, B}, null, graphProps);
+        // highlight evidence vars
+        for(String evidence: vars) {
+            if(Arrays.asList(sampleVars).contains(evidence)) continue;
+            highlightNode(evidence, values.get(evidence) ? TRUE_COLOR : FALSE_COLOR);
+        }
     }
 
     public void highlightNode(String node, Color color) {
 
-        g.setNodeHighlightFillColor(node2int(node), color, null, null);
-        g.highlightNode(node2int(node), null, null);
+        graph.setNodeHighlightFillColor(node2int(node), color, null, null);
+        graph.highlightNode(node2int(node), null, null);
     }
 
     public void unhighlightNode(String node) {
 
-        g.unhighlightNode(node2int(node), null, null);
+        graph.unhighlightNode(node2int(node), null, null);
     }
 
-    private int node2int(String node) {
-        switch (node) {
-            case A: return 1;
-            case B: return 3;
-            case X: return 2;
-            case Y: return 0;
-            default: return -1;
+    public int node2int(String node) {
+        for(int i = 0; i < vars.length; i++) {
+            if(vars[i].equals(node)) return i;
         }
+
+        return -1;
+    }
+
+    public String int2node(int id) {
+
+        return vars[id];
     }
 
     public String[] parents(String var) {
 
-        switch (var) {
-            case A: return new String[]{Y};
-            case B: return new String[]{A,X};
-            case X: return new String[]{Y};
-            case Y: return new String[]{};
-            default: return new String[]{};
+        int id = node2int(var);
+        String[] tmp = new String[vars.length];
+        int count = 0;
+
+        for(int i = 0; i < adjacencyMatrix.length; i++) {
+            if(adjacencyMatrix[i][id] != 0) {
+                tmp[count] = int2node(i);
+                count++;
+            }
         }
+        String[] parents = new String[count];
+        for(int k = 0; k < count; k++) parents[k] = tmp[k];
+
+        return parents;
     }
 
     public String[] children(String var) {
 
-        switch (var) {
-            case A: return new String[]{B};
-            case B: return new String[]{};
-            case X: return new String[]{B};
-            case Y: return new String[]{A,X};
-            default: return new String[]{};
+        int id = node2int(var);
+        String[] tmp = new String[vars.length];
+        int count = 0;
+
+        for(int i = 0; i < adjacencyMatrix[id].length; i++) {
+            if(adjacencyMatrix[id][i] != 0) {
+                tmp[count] = int2node(i);
+                count++;
+            }
         }
+        String[] children = new String[count];
+        for(int k = 0; k < count; k++) children[k] = tmp[k];
+
+        return children;
     }
 
-    public String key(final String var) { return key(var, new String[]{}); }
-    public String key(final String var, final String... evidence) {
+    public String key(final String var) { return key(var, null, new String[]{}); }
+    public String key(final String var, final String... evidence) { return key(var, null, evidence); }
+    public String key(final String var, final Boolean value, final String... evidence) {
+        return key(var, value, null, evidence);
+    }
+    public String key(final String var, final Boolean value, Hashtable<String, Boolean> values, final String... evidence) {
 
         StringBuilder sb = new StringBuilder();
         sb.append("P(");
         sb.append(var);
+
+        if(value != null) {
+            sb.append("=");
+            sb.append(value);
+        }
 
         if(evidence.length > 0) {
             sb.append(" | ");
@@ -143,13 +246,15 @@ public class BayesNet {
 
         Arrays.sort(evidence);
 
+        if(values == null) values = this.values;
+
         for(int i = 0; i < evidence.length; i++) {
 
             if(i != 0) sb.append(", ");
 
             sb.append(evidence[i]);
             sb.append("=");
-            sb.append(values.get(evidence[i]));
+            sb.append(values.get(evidence[i]) == null ? false : values.get(evidence[i]));
         }
 
         sb.append(")");
