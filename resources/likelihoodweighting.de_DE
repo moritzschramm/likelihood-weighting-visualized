@@ -20,31 +20,33 @@ firstIteration=1. Iteration
 
 line0=Starte neue Iteration
 
-line1=Wähle Zufallsvariable, deren Wert nicht bekannt ist, aus
+line1=Setze Gewichtung zurück auf 1.0
 
-line2=Die Wahrscheinlichkeit P( Var | markov-blanket(Var) ) = P(Var | parents(Var) ) * ...
+line2=Wähle eine Zufallsvariable aus dem Netz aus
 
-line3=... * P( ChildVar | parents(ChildVar) )  für jeden Kindknoten ...
+line3=Wenn die Zufallsvariable eine Evidenzvariable ist ...
 
-line4=... wobei diese bedingten Wahrscheinlichkeiten bekannt sind
+line4=... dann multipliziere ihre a-posteriori Wahrscheinlichkeit zur Gewichtung dazu
 
-line5=Basierend auf der berechneten Wahrscheinlichkeit 'p', erzeuge einen Wert für die ...
+line5=... ansonsten ...
 
-line6=... gewählte Zufallsvariable und speichere den Wert in einer Liste
+line6=... sample den Wert basierend auf der bedingten Wahrscheinlichkeit
 
-line7=Normalisiere die Liste und gib das Ergebnis zurück
+line7=Speichere die Gewichtung für jede Zufallsvariable abhängig von ihrem Wert
+
+line8=Normalisiere die Werte und gib sie zurück
 
 
 wrong_asw=falsche Antwort\n
 
 right_asw=richtige Antwort\n
 
-q1_text=Welche Zufallsvariablen können in unserem Beispiel gesamplet werden?
+q1_text=Welche Zufallsvariablen haben von Anfang an Werte?
 
-q1_asw1=Es kann nur X gesamplet werden.
+q1_asw1=Nur die Sample Variablen
 
-q1_asw2=Es können alle Zufallsvariablen gesamplet werden.
+q1_asw2=Alle Zufallsvariablen
 
-q1_asw3=Es können nur X und Y gesamplet werden.
+q1_asw3=Nur die Evidenzvariablen
 
-q1_fb=Nur Evidenzvariablen können nicht gesamplet werden.
+q1_fb=Nur die Evidenzvariablen haben am Anfang Werte

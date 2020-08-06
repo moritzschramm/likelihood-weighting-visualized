@@ -20,31 +20,33 @@ outro=As we can see, the algorithm produces an relatable result for X in conside
 
 line0=Begin new iteration
 
-line1=Choose random variable with unknown value
+line1=Reset weight to 1.0
 
-line2=Calculate the probability P( Var | markov-blanket(Var) ) = P(Var | parents(Var) ) * ...
+line2=Choose a random variable
 
-line3=... * P( ChildVar | parents(ChildVar) )  for each child node ...
+line3=If the random variable is an evidence variable...
 
-line4... where each conditional probability is known
+line4... then multiply its a-posteriori probability with the weight
 
-line5=Based on the calculated probability 'p', sample a value for ...
+line5=... or else, ...
 
-line6=... the chosen random variable and store the value in a vector
+line6=sample a value based on the conditional probability
 
-line7=Normalise the vector and return the result
+line7=Store the weight for every sample variable depending on its value
+
+line8=Normalise the result and return it
 
 
 wrong_asw=wrong answer\n
 
 right_asw=right answer\n
 
-q1_text=Which random variables can be sampled?
+q1_text=At the beginning, which random variables have values?
 
-q1_asw1=Only X can be sampled.
+q1_asw1=Only sample variables
 
-q1_asw2=All random variables can be sampled.
+q1_asw2=All random variables
 
-q1_asw3=Only X and Y can be sampled.
+q1_asw3=Only evidence variables
 
-q1_fb=All random variables can be sampled except the evidence variables.
+q1_fb=Only evidence variables have values at the beginning

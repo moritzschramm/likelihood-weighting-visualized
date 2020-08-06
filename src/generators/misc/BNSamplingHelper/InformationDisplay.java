@@ -39,12 +39,12 @@ public class InformationDisplay {
     private Text childVarDisplay;
     private Text probabilityDisplay;
 
-    private Hashtable<String, Integer> samples;
+    private Hashtable<String, Double> samples;
     private Hashtable<String, Double> normalizedSamples;
 
 
     public InformationDisplay(Language lang, BayesNet bn,
-                              Hashtable<String, Integer> samples, Hashtable<String, Double> normalizedSamples) {
+                              Hashtable<String, Double> samples, Hashtable<String, Double> normalizedSamples) {
 
         this.lang = lang;
         this.bn = bn;
@@ -92,14 +92,9 @@ public class InformationDisplay {
         lang.newGraph("legendHighlight", new int[1][1], new Node[]{new Offset(10, 10, "normalizedSampleXDisplay", AnimalScript.DIRECTION_SW)}, new String[]{""}, null, graphProps);
         lang.newText(new Offset(5, 0, "legendHighlight", AnimalScript.DIRECTION_NE), "= Var", "legendHighlightText", null, props);
 
-        graphProps.set(AnimationPropertiesKeys.FILL_PROPERTY, select);
-
-        lang.newGraph("legendSelect", new int[1][1], new Node[]{new Offset(25, 0, "legendHighlightText", AnimalScript.DIRECTION_NE)}, new String[]{""}, null, graphProps);
-        lang.newText(new Offset(5, 0, "legendSelect", AnimalScript.DIRECTION_NE), "= ChildVar", "legendSelectText", null, props);
-
         graphProps.set(AnimationPropertiesKeys.FILL_PROPERTY, trueColor);
 
-        lang.newGraph("legendTrue", new int[1][1], new Node[]{new Offset(25, 0, "legendSelectText", AnimalScript.DIRECTION_NE)}, new String[]{""}, null, graphProps);
+        lang.newGraph("legendTrue", new int[1][1], new Node[]{new Offset(25, 0, "legendHighlightText", AnimalScript.DIRECTION_NE)}, new String[]{""}, null, graphProps);
         lang.newText(new Offset(5, 0, "legendTrue", AnimalScript.DIRECTION_NE), "= True", "legendTrueText", null, props);
 
         graphProps.set(AnimationPropertiesKeys.FILL_PROPERTY, falseColor);
@@ -146,11 +141,11 @@ public class InformationDisplay {
 
             String tmp = probs + (probs.length() > 0 ? " = " : "");
 
-            probabilityDisplay.setText("p = " + tmp + df.format(resProbability), null, null);
+            probabilityDisplay.setText("weight = " + tmp + df.format(resProbability), null, null);
 
         } else if (resProbability != null) {
-            probs = df.format(resProbability);
-            probabilityDisplay.setText("p = " + df.format(resProbability), null, null);
+            probs = "";
+            probabilityDisplay.setText("weight = " + df.format(resProbability), null, null);
         } else {
             probs = "";
             probabilityDisplay.setText("", null, null);
@@ -159,6 +154,7 @@ public class InformationDisplay {
 
     public String getSampleCount(final String prefix) {
 
+        DecimalFormat df = new DecimalFormat("0.0##", new DecimalFormatSymbols(Locale.ENGLISH));
         StringBuilder sb = new StringBuilder();
         sb.append(prefix);
 
@@ -177,9 +173,9 @@ public class InformationDisplay {
             conc = ", ";
 
             sb.append("(");
-            sb.append(samples.get(var+"=true") == null ? 0 : samples.get(var+"=true"));
+            sb.append(samples.get(var+"=true") == null ? 0 : df.format(samples.get(var+"=true")));
             sb.append(", ");
-            sb.append(samples.get(var+"=false") == null ? 0 : samples.get(var+"=false"));
+            sb.append(samples.get(var+"=false") == null ? 0 : df.format(samples.get(var+"=false")));
             sb.append(")");
         }
 

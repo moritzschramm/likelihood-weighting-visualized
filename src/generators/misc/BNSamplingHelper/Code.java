@@ -50,20 +50,22 @@ public class Code {
         exp.addCodeLine("6. "+translator.translateMessage("line5"), null, 0, null);
         exp.addCodeLine("7. "+translator.translateMessage("line6"), null, 0, null);
         exp.addCodeLine("8. "+translator.translateMessage("line7"), null, 0, null);
+        exp.addCodeLine("9. "+translator.translateMessage("line8"), null, 0, null);
 
         scp.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
                 Font.MONOSPACED, Font.PLAIN, 16));
         sc = lang.newSourceCode(new Offset(0, 10, "explanation", AnimalScript.DIRECTION_SW), "sourceCode",
                 null, scp);
 
-        sc.addCodeLine("for i = 1 to NumberOfSamples:", null, 0*INDENTATION_WIDTH, null);                         // 0
-        sc.addCodeLine("for each Var in NonevidenceVars:", null, 1*INDENTATION_WIDTH, null);                      // 1
-        sc.addCodeLine("p = P( Var | parents(Var) )", null, 2*INDENTATION_WIDTH, null);                           // 2
-        sc.addCodeLine("for each ChildVar in children(Var):", null, 2*INDENTATION_WIDTH, null);                   // 3
-        sc.addCodeLine("p = p * P( ChildVar | parents(ChildVar) )", null, 3*INDENTATION_WIDTH, null);             // 4
-        sc.addCodeLine("sampleValue = createValueGivenProbability(p)", null, 2*INDENTATION_WIDTH, null);          // 5
-        sc.addCodeLine("increaseSampleCount(Var, sampleValue)", null, 2*INDENTATION_WIDTH, null);                 // 6
-        sc.addCodeLine("return normalize(Samples)", null, 0*INDENTATION_WIDTH, null);                             // 7
+        sc.addCodeLine("for i = 1 to NumberOfSamples:", null, 0*INDENTATION_WIDTH, null);                    // 0
+        sc.addCodeLine("w = 1.0", null, 1*INDENTATION_WIDTH, null);                                         // 1
+        sc.addCodeLine("for each Var in Vars:", null, 1*INDENTATION_WIDTH, null);                            // 2
+        sc.addCodeLine("if Var is in EvidenceVars:", null, 2*INDENTATION_WIDTH, null);                       // 3
+        sc.addCodeLine("w = w * P( Var = Values[Var] | parents(Var) )", null, 3*INDENTATION_WIDTH, null);    // 4
+        sc.addCodeLine("else:", null, 2*INDENTATION_WIDTH, null);                                            // 5
+        sc.addCodeLine("Values[Var] = sample(P(Var | parents(Var))", null, 3*INDENTATION_WIDTH, null);       // 6
+        sc.addCodeLine("storeWeightForEachSampleVar(Values, w);", null, 2*INDENTATION_WIDTH, null);          // 7
+        sc.addCodeLine("return normalizedSamples()", null, 0*INDENTATION_WIDTH, null);                       // 8
     }
 
     public void highlight(int lineNo) {

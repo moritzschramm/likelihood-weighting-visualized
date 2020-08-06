@@ -19,6 +19,7 @@ import generators.framework.Generator;
 import generators.framework.GeneratorType;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Locale;
 import algoanim.primitives.generators.Language;
 import java.util.Hashtable;
@@ -53,7 +54,7 @@ public class LikelihoodWeighting implements ValidatingGenerator {
     // variables and their sample counts
     private String[] vars;
     private String[] sampleVars;
-    private Hashtable<String, Integer> samples;
+    private Hashtable<String, Double> samples;
     private Hashtable<String, Double> normalizedSamples;
 
     // for questions
@@ -170,12 +171,12 @@ public class LikelihoodWeighting implements ValidatingGenerator {
             sample();
         }
 
-        code.highlight(6);
+        code.highlight(7);
 
         lang.nextStep();
 
-        code.unhighlight(6);
-        code.highlight(7);
+        code.unhighlight(7);
+        code.highlight(8);
 
         lang.nextStep(translator.translateMessage("outroTOC"));
 
@@ -255,50 +256,89 @@ public class LikelihoodWeighting implements ValidatingGenerator {
     /* algorithm */
     public void sample() {
 
-        /*iteration++;
-        info.updateInformation(iteration);
-
         code.unhighlight(0);
+        code.unhighlight(7);
         code.highlight(1);
 
-        double w = 1;
+        double weight = 1.0;
 
-        for(String var: bn.list()) {
+        for(String var: sampleVars) {
 
-            if(var.equals(BayesNet.A) || var.equals(BayesNet.B)) {
+            bn.unhighlightNode(var);
+        }
 
-                double p = bn.probabilities.get(bn.key(var, bn.parents(var)));
+        info.updateVars(null, null, weight, null);
 
-                if(!bn.values.get(var)) p = 1 - p;
+        lang.nextStep();
 
-                w *= p;
+        for(String var: vars) {
 
-            } else {
+            code.unhighlight(1);
+            code.highlight(2);
 
-                double p = bn.probabilities.get(bn.key(var, bn.parents(var)));
+            info.updateVars(var, null, weight, -1.0);
 
-                for(String child: bn.children(var)) {
+            bn.highlightNode(var, BayesNet.HIGHLIGHT_COLOR);
 
-                    p *= bn.probabilities.get(bn.key(child, bn.parents(child)));
-                }
+            double p = bn.probabilities.get(bn.key(var, bn.parents(var)));
+
+            lang.nextStep();
+
+            code.unhighlight(2);
+
+            if(Arrays.asList(sampleVars).contains(var)) {       // is non-evidence variable
+
+                code.highlight(5);
+
+                lang.nextStep();
+
+                code.unhighlight(5);
+                code.highlight(6);
 
                 boolean sample = createSampleValue(p);
 
                 bn.values.put(var, sample);
+
+                bn.highlightNode(var, bn.values.get(var) ? BayesNet.TRUE_COLOR : BayesNet.FALSE_COLOR);
+
+                lang.nextStep();
+
+                code.unhighlight(6);
+
+            } else {    // is evidence variable
+
+                code.highlight(3);
+
+                lang.nextStep();
+
+                code.unhighlight(3);
+                code.highlight(4);
+
+                weight *= p;
+
+                info.updateVars(var, null, weight, p);
+
+                bn.highlightNode(var, bn.values.get(var) ? BayesNet.TRUE_COLOR : BayesNet.FALSE_COLOR);
+
+                lang.nextStep();
+
+                code.unhighlight(4);
             }
+
         }
 
-        for(String var: bn.list()) {
+        code.highlight(7);
 
-            double [] tmp = samples.get(var);
-            tmp[bn.values.get(var) ? 1 : 0] += w;
-            samples.put(var, tmp);
+        for(String var: sampleVars) {
+
+            increaseSampleCount(var, bn.values.get(var), weight);
         }
-        normalize();
 
-        info.updateInformation(iteration);*/
+        info.updateInformation(iteration);
 
+        lang.nextStep();
 
+        code.unhighlight(7);
     }
 
     private boolean createSampleValue(double p) {
@@ -306,10 +346,10 @@ public class LikelihoodWeighting implements ValidatingGenerator {
         return random.nextDouble() <= p;
     }
 
-    private void increaseSampleCount(String var, boolean value) {
+    private void increaseSampleCount(String var, boolean value, double weight) {
 
         String key = var + (value ? "=true" : "=false");
-        samples.put(key, (samples.get(key) == null ? 0 : samples.get(key)) + 1);
+        samples.put(key, (samples.get(key) == null ? 0 : samples.get(key)) + weight);
 
         double trueVal = samples.get(var+"=true") == null ? 0 : samples.get(var+"=true");
         double falseVal = samples.get(var+"=false") == null ? 0 : samples.get(var+"=false");
@@ -336,32 +376,25 @@ public class LikelihoodWeighting implements ValidatingGenerator {
     }
 
     public String getCodeExample(){
-        return "function likelihoodWeighting(Var, evidence, N):"
+        return "function likelihoodWeighting(Var, EvidenceVars, Values, NumberOfSamples):"
                 +"\n"
-                +"    for j = 1 to N:"
+                +"    for i = 1 to NumberOfSamples:"
                 +"\n"
-                +"        x, w = weightedSample(evidence)"
+                +"        w = 1.0;"
                 +"\n"
-                +"        W[x] = W[x] + w"
+                +"        for each Var in Vars:"
                 +"\n"
-                +"return normalize(W)"
+                +"            if Var is in EvidenceVars:"
                 +"\n"
+                +"                w = w * P( Var = Values[Var] | parents(Var) )"
                 +"\n"
-                +"function weightedSample(evidence):"
+                +"            else:"
                 +"\n"
-                +"    w = 1; x mit e init....//fixme"
+                +"                Values[Var] = sample(P(Var | parents(Var))"
                 +"\n"
-                +"    foreach Var in Vars:"
+                +"        storeWeightForEachSampleVar(Values, w);"
                 +"\n"
-                +"        if Var is in evidence//fixme:"
-                +"\n"
-                +"            w = w * P( Var = x | parents(Var) )"
-                +"\n"
-                +"        else:"
-                +"\n"
-                +"            x[i] = sample(P(Var | parents(Var))"
-                +"\n"
-                +"return x, w";
+                +"return normalizedSamples()";
     }
 
     public String getFileExtension(){

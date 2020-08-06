@@ -1,71 +1,237 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <PropertiesTreeModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="PropertiesTreeModel.xsd">
 	<Folder name="Root">
+		<Primitive type="Graph">
+			<name>graph</name>
+			<value><Graph>%graphscript
+
+graph 4
+graphcoordinates at 0 0
+
+node Y at 750 280
+node A at 650 330
+node X at 850 330
+node B at 750 380
+
+edge Y A
+edge Y X
+edge A B
+edge X B
+			</Graph></value>
+		</Primitive>
+
+		<Primitive type="Color">
+			<name>Highlight Color</name>
+			<value><Color>(200, 200, 200)</Color></value>
+			<description>Highlight color of a node in the graph</description>
+		</Primitive>
+		<Primitive type="Color">
+			<name>Select Color</name>
+			<value><Color>(80, 80, 80)</Color></value>
+			<description>Color of a selected node in the graph</description>
+		</Primitive>
+		<Primitive type="Color">
+			<name>True Color</name>
+			<value><Color>(0, 255, 0)</Color></value>
+			<description>Color of a node with value true in the graph</description>
+		</Primitive>
+		<Primitive type="Color">
+			<name>False Color</name>
+			<value><Color>(255, 0, 0)</Color></value>
+			<description>Color of a node with value false in the graph</description>
+		</Primitive>
+
+		<AnimationProperties type="GraphProperties">
+			<AnimationPropertyItem type="ColorPropertyItem">
+				<name>elementColor</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><Color>(0, 0, 0)</Color></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="BooleanPropertyItem">
+				<name>weighted</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><boolean value="false" /></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="ColorPropertyItem">
+				<name>fillColor</name>
+				<isEditable value="true" />
+				<label></label>
+				<value><Color>(255, 255, 255)</Color></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="ColorPropertyItem">
+				<name>highlightColor</name>
+				<isEditable value="true" />
+				<label></label>
+				<value><Color>(0, 255, 0)</Color></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="ColorPropertyItem">
+				<name>color</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><Color>(255, 175, 175)</Color></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="BooleanPropertyItem">
+				<name>hidden</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><boolean value="false" /></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="BooleanPropertyItem">
+				<name>filled</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><boolean value="false" /></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="BooleanPropertyItem">
+				<name>directed</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><boolean value="true" /></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="ColorPropertyItem">
+				<name>nodeColor</name>
+				<isEditable value="true" />
+				<label></label>
+				<value><Color>(0, 0, 0)</Color></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="ColorPropertyItem">
+				<name>edgeColor</name>
+				<isEditable value="true" />
+				<label></label>
+				<value><Color>(0, 0, 0)</Color></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="StringPropertyItem">
+				<name>name</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><String>graphProps</String></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="ColorPropertyItem">
+				<name>elemHighlight</name>
+				<isEditable value="true" />
+				<label></label>
+				<value><Color>(0, 0, 0)</Color></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="IntegerPropertyItem">
+				<name>depth</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><int>1</int></value>
+			</AnimationPropertyItem>
+		</AnimationProperties>
+
+
+		<Primitive type="StringArray">
+			<name>Variables</name>
+			<value><StringArray>Y, A, X, B</StringArray></value>
+			<description>Specify the variables in the same order as in the graph (root to leaf)</description>
+		</Primitive>
+		<Primitive type="StringArray">
+			<name>Non-evidence variables</name>
+			<value><StringArray>Y, X</StringArray></value>
+			<description>Specify the non-evidence variables in the same order as in the graph (root to leaf)</description>
+		</Primitive>
+		<Primitive type="StringArray">
+			<name>Values</name>
+			<value><StringArray>true, false</StringArray></value>
+			<description>Specify the values of variables in the same order as in the variables list (without the non-evidence vars)</description>
+		</Primitive>
+
+		<Primitive type="intMatrix">
+			<name>Probabilities</name>
+			<value><intMatrix>30, 10, 40, 90; 0, 20, 70, 99; 0, 0, 0, 30; 0, 0, 0, 60;</intMatrix></value>
+			<description>Columns are the nodes of the graph as in the order of the variables list. Depending on the row, a cell contains the probability value with the corresponding evidence variable values (alternated like in a conventional truth table)</description>
+		</Primitive>
+
+
 		<Primitive type="int">
 			<name>Seed</name>
 			<value><int>1234</int></value>
-			<description>Der Seed für die zufällig berechneten Sample Werte</description>
+			<description>The seed for the random number generator used for sampling</description>
 		</Primitive>
 
-		<Primitive type="double">
-			<name>P(Y)</name>
-			<value><double>0.3</double></value>
-			<description>Wert für die Wahrscheinlichkeit P(Y)</description>
+		<Primitive type="int">
+			<name>NumberOfSamples</name>
+			<value><int>10</int></value>
+			<description>Number of Samples</description>
 		</Primitive>
 
-		<Primitive type="double">
-			<name>P(X | Y=true)</name>
-			<value><double>0.4</double></value>
-			<description>Wert für die Wahrscheinlichkeit P(X | Y=true)</description>
-		</Primitive>
-		<Primitive type="double">
-			<name>P(X | Y=false)</name>
-			<value><double>0.7</double></value>
-			<description>Wert für die Wahrscheinlichkeit P(X | Y=false)</description>
-		</Primitive>
 
-		<Primitive type="double">
-			<name>P(A | Y=true)</name>
-			<value><double>0.1</double></value>
-			<description>Wert für die Wahrscheinlichkeit P(A | Y=true)</description>
-		</Primitive>
-		<Primitive type="double">
-			<name>P(A | Y=false)</name>
-			<value><double>0.2</double></value>
-			<description>Wert für die Wahrscheinlichkeit P(A | Y=false)</description>
-		</Primitive>
-
-		<Primitive type="double">
-			<name>P(B | A=true, X=true)</name>
-			<value><double>0.9</double></value>
-			<description>Wert für die Wahrscheinlichkeit P(B | A=true, X=true)</description>
-		</Primitive>
-		<Primitive type="double">
-			<name>P(B | A=true, X=false)</name>
-			<value><double>0.99</double></value>
-			<description>Wert für die Wahrscheinlichkeit P(B | A=true, X=false)</description>
-		</Primitive>
-		<Primitive type="double">
-			<name>P(B | A=false, X=true)</name>
-			<value><double>0.3</double></value>
-			<description>Wert für die Wahrscheinlichkeit P(B | A=false, X=true)</description>
-		</Primitive>
-		<Primitive type="double">
-			<name>P(B | A=false, X=false)</name>
-			<value><double>0.6</double></value>
-			<description>Wert für die Wahrscheinlichkeit P(B | A=false, X=false)</description>
-		</Primitive>
-
-		<Primitive type="boolean">
-			<name>A</name>
-			<value><boolean value="true" /></value>
-			<description>Fester Wert für die Zufallsvariable A</description>
-		</Primitive>
-		<Primitive type="boolean">
-			<name>B</name>
-			<value><boolean value="true" /></value>
-			<description>Fester Wert für die Zufallsvariable B</description>
-		</Primitive>
-
+		<AnimationProperties type="SourceCodeProperties">
+			<AnimationPropertyItem type="ColorPropertyItem">
+				<name>highlightColor</name>
+				<isEditable value="true" />
+				<label>highlightColor</label>
+				<value><Color>(255, 0, 0)</Color></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="ColorPropertyItem">
+				<name>contextColor</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><Color>(0, 0, 0)</Color></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="IntegerPropertyItem">
+				<name>depth</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><int>1</int></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="IntegerPropertyItem">
+				<name>indentation</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><int>1</int></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="ColorPropertyItem">
+				<name>color</name>
+				<isEditable value="true" />
+				<label>color</label>
+				<value><Color>(0, 0, 0)</Color></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="BooleanPropertyItem">
+				<name>hidden</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><boolean value="false" /></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="IntegerPropertyItem">
+				<name>size</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><int>16</int></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="StringPropertyItem">
+				<name>name</name>
+				<isEditable value="true" />
+				<label></label>
+				<value><String>sourceCode</String></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="BooleanPropertyItem">
+				<name>bold</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><boolean value="false" /></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="IntegerPropertyItem">
+				<name>row</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><int>1</int></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="BooleanPropertyItem">
+				<name>italic</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><boolean value="false" /></value>
+			</AnimationPropertyItem>
+			<AnimationPropertyItem type="FontPropertyItem">
+				<name>font</name>
+				<isEditable value="false" />
+				<label></label>
+				<value><Font>Monospaced</Font></value>
+			</AnimationPropertyItem>
+		</AnimationProperties>
 	</Folder>
 </PropertiesTreeModel>

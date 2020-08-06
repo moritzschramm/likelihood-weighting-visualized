@@ -2,10 +2,12 @@ package generators.misc.BNSamplingHelper;
 
 import algoanim.primitives.Graph;
 import algoanim.primitives.generators.Language;
+import algoanim.properties.AnimationProperties;
 import algoanim.properties.AnimationPropertiesKeys;
 import algoanim.properties.GraphProperties;
 import algoanim.util.Coordinates;
 import algoanim.util.Node;
+import animal.main.Animation;
 import generators.framework.properties.AnimationPropertiesContainer;
 
 import java.awt.*;
@@ -20,6 +22,7 @@ public class BayesNet {
     private Graph graph;
     private GraphProperties props;
     private int[][] adjacencyMatrix;
+    public static Color NORMAL_COLOR;
     public static Color HIGHLIGHT_COLOR;
     public static Color SELECT_COLOR;
     public static Color TRUE_COLOR;
@@ -59,6 +62,7 @@ public class BayesNet {
         SELECT_COLOR = (Color) primitives.get("Select Color");
         TRUE_COLOR = (Color) primitives.get("True Color");
         FALSE_COLOR = (Color) primitives.get("False Color");
+        NORMAL_COLOR = (Color) props.get(AnimationPropertiesKeys.FILL_PROPERTY);
 
         // init values and probabilities
         String[] v = (String[]) primitives.get("Values");
