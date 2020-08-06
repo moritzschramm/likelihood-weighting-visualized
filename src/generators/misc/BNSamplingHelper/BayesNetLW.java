@@ -14,7 +14,7 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.Hashtable;
 
-public class BayesNet {
+public class BayesNetLW {
 
     private Language lang;
 
@@ -37,7 +37,7 @@ public class BayesNet {
     public Hashtable<String, Boolean> values;
 
 
-    public BayesNet(Language lang) {
+    public BayesNetLW(Language lang) {
 
         this.lang = lang;
         this.values = new Hashtable<>();

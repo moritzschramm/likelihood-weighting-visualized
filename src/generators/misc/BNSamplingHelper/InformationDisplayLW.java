@@ -6,7 +6,6 @@ import algoanim.primitives.generators.Language;
 import algoanim.properties.AnimationPropertiesKeys;
 import algoanim.properties.GraphProperties;
 import algoanim.properties.TextProperties;
-import algoanim.util.Coordinates;
 import algoanim.util.Node;
 import algoanim.util.Offset;
 import translator.Translator;
@@ -17,10 +16,10 @@ import java.text.DecimalFormatSymbols;
 import java.util.Hashtable;
 import java.util.Locale;
 
-public class InformationDisplay {
+public class InformationDisplayLW {
 
     private Language lang;
-    private BayesNet bn;
+    private BayesNetLW bn;
     private String[] sampleVars;
     private String of;
     private String normValue;
@@ -43,8 +42,8 @@ public class InformationDisplay {
     private Hashtable<String, Double> normalizedSamples;
 
 
-    public InformationDisplay(Language lang, BayesNet bn,
-                              Hashtable<String, Double> samples, Hashtable<String, Double> normalizedSamples) {
+    public InformationDisplayLW(Language lang, BayesNetLW bn,
+                                Hashtable<String, Double> samples, Hashtable<String, Double> normalizedSamples) {
 
         this.lang = lang;
         this.bn = bn;

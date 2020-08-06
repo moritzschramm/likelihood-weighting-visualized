@@ -43,9 +43,9 @@ public class LikelihoodWeighting implements ValidatingGenerator {
 
     private Text header;
 
-    private Code code;
-    private BayesNet bn;
-    private InformationDisplay info;
+    private CodeLW code;
+    private BayesNetLW bn;
+    private InformationDisplayLW info;
 
     // iteration number, increased when sample() is called
     private int iteration = 0;
@@ -80,9 +80,9 @@ public class LikelihoodWeighting implements ValidatingGenerator {
         samples = new Hashtable<>();
         normalizedSamples = new Hashtable<>();
 
-        code = new Code(lang, translator);
-        bn = new BayesNet(lang);
-        info = new InformationDisplay(lang, bn, samples, normalizedSamples);
+        code = new CodeLW(lang, translator);
+        bn = new BayesNetLW(lang);
+        info = new InformationDisplayLW(lang, bn, samples, normalizedSamples);
 
 
         RIGHT_ASW = translator.translateMessage("right_asw");
@@ -278,7 +278,7 @@ public class LikelihoodWeighting implements ValidatingGenerator {
 
             info.updateVars(var, null, weight, -1.0);
 
-            bn.highlightNode(var, BayesNet.HIGHLIGHT_COLOR);
+            bn.highlightNode(var, BayesNetLW.HIGHLIGHT_COLOR);
 
             double p = bn.probabilities.get(bn.key(var, bn.parents(var)));
 
@@ -299,7 +299,7 @@ public class LikelihoodWeighting implements ValidatingGenerator {
 
                 bn.values.put(var, sample);
 
-                bn.highlightNode(var, bn.values.get(var) ? BayesNet.TRUE_COLOR : BayesNet.FALSE_COLOR);
+                bn.highlightNode(var, bn.values.get(var) ? BayesNetLW.TRUE_COLOR : BayesNetLW.FALSE_COLOR);
 
                 lang.nextStep();
 
@@ -318,7 +318,7 @@ public class LikelihoodWeighting implements ValidatingGenerator {
 
                 info.updateVars(var, null, weight, p);
 
-                bn.highlightNode(var, bn.values.get(var) ? BayesNet.TRUE_COLOR : BayesNet.FALSE_COLOR);
+                bn.highlightNode(var, bn.values.get(var) ? BayesNetLW.TRUE_COLOR : BayesNetLW.FALSE_COLOR);
 
                 lang.nextStep();
 

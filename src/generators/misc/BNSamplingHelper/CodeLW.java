@@ -12,7 +12,7 @@ import java.awt.*;
 import algoanim.util.Offset;
 import translator.Translator;
 
-public class Code {
+public class CodeLW {
 
     public final int INDENTATION_WIDTH = 2;
 
@@ -22,7 +22,7 @@ public class Code {
     private SourceCode exp;
     private SourceCodeProperties scp;
 
-    public Code(Language lang, Translator translator) {
+    public CodeLW(Language lang, Translator translator) {
         this.lang = lang;
         this.translator = translator;
     }
