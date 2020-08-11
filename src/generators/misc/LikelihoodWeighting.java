@@ -360,7 +360,7 @@ public class LikelihoodWeighting implements ValidatingGenerator {
     }
 
     public String getName() {
-        return "LikelihoodWeighting";
+        return "Likelihood Weighting";
     }
 
     public String getAlgorithmName() {
@@ -372,7 +372,7 @@ public class LikelihoodWeighting implements ValidatingGenerator {
     }
 
     public String getDescription(){
-        return "Spezialfall von Importance Sampling, zugeschnitten auf Inferenz in Bayesschen Netzen. Erzeugt Ergebnisse die konsistent zu Evidenz e sind. ";
+        return translator.translateMessage("description");
     }
 
     public String getCodeExample(){
@@ -402,7 +402,7 @@ public class LikelihoodWeighting implements ValidatingGenerator {
     }
 
     public Locale getContentLocale() {
-        return Locale.GERMAN;
+        return locale;
     }
 
     public GeneratorType getGeneratorType() {
@@ -451,7 +451,7 @@ public class LikelihoodWeighting implements ValidatingGenerator {
 
         BayesNetLW bn;
         try {
-            bn = new BayesNetLW(new AnimalScript("Gibbs Sampling", "Moritz Schramm, Moritz Andres", 800, 600));
+            bn = new BayesNetLW(new AnimalScript("Likelihood Weighting", "Moritz Schramm, Moritz Andres", 800, 600));
             bn.init(primitives, null, vars, sampleVars);
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid Probability table for given graph");
@@ -487,7 +487,7 @@ public class LikelihoodWeighting implements ValidatingGenerator {
         Generator generator = new LikelihoodWeighting("resources/likelihoodweighting", Locale.GERMANY);
         generator.init();
 
-        if(args[0].equals("generator")) {
+        if (args[0].equals("generator")) {
 
             animal.main.Animal.startGeneratorWindow(generator);
 
@@ -514,8 +514,8 @@ public class LikelihoodWeighting implements ValidatingGenerator {
             graphProps.set(AnimationPropertiesKeys.WEIGHTED_PROPERTY, false);
 
             int[][] adjacencyMatrix = new int[4][4];
-            for(int i = 0; i < adjacencyMatrix.length; i++)
-                for(int j = 0; j < adjacencyMatrix.length; j++)
+            for (int i = 0; i < adjacencyMatrix.length; i++)
+                for (int j = 0; j < adjacencyMatrix.length; j++)
                     adjacencyMatrix[i][j] = 0;
 
             adjacencyMatrix[0][1] = 1;
@@ -524,11 +524,12 @@ public class LikelihoodWeighting implements ValidatingGenerator {
             adjacencyMatrix[2][3] = 1;
 
             Node[] nodes = new Node[4];
-            int offsetX = 600; int offsetY = 180;
-            nodes[0] = new Coordinates(offsetX+150, offsetY+100);
-            nodes[1] = new Coordinates(offsetX+50, offsetY+150);
-            nodes[2] = new Coordinates(offsetX+250, offsetY+150);
-            nodes[3] = new Coordinates(offsetX+150, offsetY+200);
+            int offsetX = 600;
+            int offsetY = 180;
+            nodes[0] = new Coordinates(offsetX + 150, offsetY + 100);
+            nodes[1] = new Coordinates(offsetX + 50, offsetY + 150);
+            nodes[2] = new Coordinates(offsetX + 250, offsetY + 150);
+            nodes[3] = new Coordinates(offsetX + 150, offsetY + 200);
 
             Language lang = new AnimalScript("Gibbs Sampling", "Moritz Schramm, Moritz Andres", 800, 600);
             Graph graph = lang.newGraph("bn", adjacencyMatrix, nodes, new String[]{"Y", "A", "X", "B"}, null, graphProps);

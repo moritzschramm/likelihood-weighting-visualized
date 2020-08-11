@@ -62,7 +62,10 @@ public class BayesNetLW {
         SELECT_COLOR = (Color) primitives.get("Select Color");
         TRUE_COLOR = (Color) primitives.get("True Color");
         FALSE_COLOR = (Color) primitives.get("False Color");
-        NORMAL_COLOR = (Color) props.get(AnimationPropertiesKeys.FILL_PROPERTY);
+        if(props != null)
+            NORMAL_COLOR = (Color) props.get(AnimationPropertiesKeys.FILL_PROPERTY);
+        else
+            NORMAL_COLOR = Color.WHITE;
 
         // init values and probabilities
         String[] v = (String[]) primitives.get("Values");
