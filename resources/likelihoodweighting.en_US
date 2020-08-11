@@ -10,11 +10,11 @@ outroTOC=Summary
 of=of
 normValue=Normalized value
 
-description=Bayesian networks are used to model dependencies between random variables and to calculate probabilities of events. \nDeveloping exact inference, i.e determine a conditional probability, is a NP-hard problem for bayesian networks. For this reason sampling methods are used to approximate the exact inference. \nHere we use Gibbs Sampling, a Markov Chain Monte Carlo algorithm. It starts in a random state and generates a new state based on a random sample of a random variable for each iteration. \nThe probability to sample a specific value depends on the conditional propabilities that were set at the beginning.
+description=Bayesian networks are used to model dependencies between random variables and to calculate probabilities of events. \nDeveloping exact inference, i.e determine a conditional probability, is a NP-hard problem for bayesian networks. For this reason sampling methods are used to approximate the exact inference. \nHere we use Likelihood Weighting, which is a generalisation of Importance Sampling.  \nValues for the evidence variables are set, only sample variables are being sampled. To weigh the sampled events correctly, a weight is calculated, based on the conditional probabilities of the evidence variables.
 
-intro=A directed graph is used to visualize the bayessian network so that the vertices represent the random variables and the edges represent the conditions. \nThe unknown random variables (non-evidence variables) will be random-sampled based on the computed probabilities and receive a value of true or false.\nBy counting the numbers of samples of true and false for each non-evidence variable and normalizing them at the end, the algorithm approximates the a-posteriori probability by time over each iteration.
+intro=A directed graph is used to visualize the bayessian network so that the vertices represent the random variables and the edges represent the conditions. \nThe algorithm uses the conditional probabilities of the evidence variables as weights. \nThe sample variables will be sampled in each iteration. \nBy adding all weights up, a a-posteriori probability is produced.
 
-outro=As we can see, the algorithm produces an relatable result for X in consideration of the bayessian network. \nIt can be shown that the approximation converges in a stationary state of the markov-chain which corresponds to the real probability distribution. \nTherefore the bias of the discretization (sampling) vanishes with respect to the iterations taken. \nThe downside of this algorithm is that it needs all conditional probabilities which are often not available.
+outro=As we can see, the algorithm produces an relatable result in consideration of the bayessian network. \nThe resulting vector is being normalized to be used as a postirori probability.
 
 
 

@@ -64,7 +64,7 @@ public class CodeLW {
         sc.addCodeLine("w = w * P( Var = Values[Var] | parents(Var) )", null, 3*INDENTATION_WIDTH, null);    // 4
         sc.addCodeLine("else:", null, 2*INDENTATION_WIDTH, null);                                            // 5
         sc.addCodeLine("Values[Var] = sample(P(Var | parents(Var))", null, 3*INDENTATION_WIDTH, null);       // 6
-        sc.addCodeLine("storeWeightForEachSampleVar(Values, w);", null, 2*INDENTATION_WIDTH, null);          // 7
+        sc.addCodeLine("addWeightForEachSampleVar(Vars, Values, w);", null, 2*INDENTATION_WIDTH, null);          // 7
         sc.addCodeLine("return normalizedSamples()", null, 0*INDENTATION_WIDTH, null);                       // 8
     }
 

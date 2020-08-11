@@ -376,7 +376,7 @@ public class LikelihoodWeighting implements ValidatingGenerator {
     }
 
     public String getCodeExample(){
-        return "function likelihoodWeighting(Var, EvidenceVars, Values, NumberOfSamples):"
+        return "function likelihoodWeighting(Vars, EvidenceVars, Values, NumberOfSamples):"
                 +"\n"
                 +"    for i = 1 to NumberOfSamples:"
                 +"\n"
@@ -392,7 +392,7 @@ public class LikelihoodWeighting implements ValidatingGenerator {
                 +"\n"
                 +"                Values[Var] = sample(P(Var | parents(Var))"
                 +"\n"
-                +"        storeWeightForEachSampleVar(Values, w);"
+                +"        addWeightForEachSampleVar(Vars, Values, w);"
                 +"\n"
                 +"return normalizedSamples()";
     }
@@ -415,21 +415,68 @@ public class LikelihoodWeighting implements ValidatingGenerator {
 
     public boolean validateInput(AnimationPropertiesContainer props, Hashtable<String, Object> primitives) {
 
-        for(String key: primitives.keySet()) {
+        int seed = (int) primitives.get("Seed");
 
-            switch (key) {
-                case "Seed": case "NumberOfSamples":
-                    int i = (int) primitives.get(key);
-                    if (i <= 0) return false;
-                    break;
-                case "Variables": case "Non-evidence variables": case "Values":
-                    String [] tmp = (String []) primitives.get(key);
-                    if (tmp.length > 4) return false;
-                    break;
-                case "Probabilities":
-                    int[][] p = (int[][]) primitives.get(key);
-                    if(p.length < 1) return false;
+        int numberOfIterations = (int) primitives.get("NumberOfSamples");
+
+        if(seed <= 0)
+            throw new IllegalArgumentException("Seed must be greater than 0.");
+        if(numberOfIterations <= 0)
+            throw new IllegalArgumentException("NumberOfSamples must be greater than 0.");
+
+        String[] vars = (String []) primitives.get("Variables");
+        String[] sampleVars = (String []) primitives.get("Non-evidence variables");
+        String[] values = (String []) primitives.get("Values");
+
+        if(vars.length > 4)
+            throw new IllegalArgumentException("Length of Variables must not be greater than 4.");
+
+        if(sampleVars.length > vars.length)
+            throw new IllegalArgumentException("Length of Non-evidence variables cannot be greater than length of Variables");
+
+        if(sampleVars.length < 1)
+            throw new IllegalArgumentException("There must be at least one Non-evidence variable");
+
+        if(vars.length - sampleVars.length != values.length)
+            throw new IllegalArgumentException("Array 'Values' has an invalid form");
+
+        int[][] p = (int[][]) primitives.get("Probabilities");
+
+        for(int i = 0; i < p.length; i++) {
+            for(int j = 0; j < p[i].length; j++) {
+                if(p[i][j] < 0 || p[i][j] > 100)
+                    throw new IllegalArgumentException("Probabilities table has invalid entries (< 0 or > 100).");
             }
+        }
+
+        BayesNetLW bn;
+        try {
+            bn = new BayesNetLW(new AnimalScript("Gibbs Sampling", "Moritz Schramm, Moritz Andres", 800, 600));
+            bn.init(primitives, null, vars, sampleVars);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid Probability table for given graph");
+        }
+
+        if(bn.graph.getNodes().length != vars.length)
+            throw new IllegalArgumentException("Variables do not match graph nodes");
+
+        for(int i = 0; i < bn.graph.getSize(); i++) {
+            String label = bn.graph.getNodeLabel(i);
+            if( ! Arrays.asList(vars).contains(label))
+                throw new IllegalArgumentException("Invalid Variables for given graph");
+        }
+
+        for(String var: sampleVars) {
+            if( ! Arrays.asList(vars).contains(var))
+                throw new IllegalArgumentException("Invalid Sample Variables");
+        }
+
+        for(String var: vars) {
+            int parents = bn.parents(var).length;
+            int children = bn.children(var).length;
+
+            if(parents == 0 && children == 0)
+                throw new IllegalArgumentException("Invalid graph");
         }
 
         return true;

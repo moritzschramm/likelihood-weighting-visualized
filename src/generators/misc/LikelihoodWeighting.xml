@@ -18,6 +18,7 @@ edge Y X
 edge A B
 edge X B
 			</Graph></value>
+			<description>Specify the graph (nodes from root to leaf).</description>
 		</Primitive>
 
 		<Primitive type="Color">
